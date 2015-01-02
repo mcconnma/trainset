@@ -13,9 +13,9 @@ const double incx = 2.83;
 
 struct Piece {
 	Type type;
-	bool reversable;
-	unsigned xinc;
-	unsigned yinc;
+	bool reversable = false;
+	unsigned xinc = 0;
+	unsigned yinc = 0;
 };
 
 class Solution {
