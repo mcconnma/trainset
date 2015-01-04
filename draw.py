@@ -3,125 +3,110 @@
 import math
 import cairo
 
-#def math.radians(d):
-#	return d * (math.pi / 180)
+class TrackBuilder():
 
-r = 100.0
-WIDTH, HEIGHT = 10*r, 10*r
-startx = 5*r
-starty = 5*r
-currentx = 0.0
-currenty = 0.0
-currdeg = 0
-arcx = math.cos(math.radians(45)) * r
-arcy = math.sin(math.radians(45)) * r
-surface = cairo.ImageSurface (cairo.FORMAT_ARGB32, int(WIDTH), int(HEIGHT))
-ctx = cairo.Context (surface)
+	def __init__(self):
+		self.r = 100.0
+		self.WIDTH, self.HEIGHT = 10*self.r, 10*self.r
+		self.startx = 5*self.r
+		self.starty = 5*self.r
+		self.currentx = 0.0
+		self.currenty = 0.0
+		self.currdeg = 0
+		self.arcx = math.cos(math.radians(45)) * self.r
+		self.arcy = math.sin(math.radians(45)) * self.r
+		self.surface = cairo.ImageSurface (cairo.FORMAT_ARGB32, int(self.WIDTH), int(self.HEIGHT))
+		self.ctx = cairo.Context (self.surface)
+		self.ctx.move_to (self.startx, self.starty)
+		self.ctx.arc(self.startx, self.starty, 5, 0, 2*math.pi)
+		self.ctx.set_source_rgb(0.3, 0.4, 0.6)
+		self.ctx.fill()
+		self.ctx.move_to (self.startx, self.starty)
+		self.currentx, self.currenty = self.ctx.get_current_point()
 
-def add(t):
-	global currentx, currenty, currdeg
-	if t == 'cr':
-		ctx.new_sub_path()
-		if currdeg == 0:
-			ctx.arc (currentx-r, currenty, r, math.radians(currdeg), math.radians(currdeg+45))
-		elif currdeg == 45:
-			ctx.arc (currentx - arcx, currenty - arcy, r, math.radians(currdeg), math.radians(currdeg+45))
-		elif currdeg == 90:
-			ctx.arc (currentx, currenty-r, r, math.radians(currdeg), math.radians(currdeg+45))
-		elif currdeg == 135:
-			ctx.arc (currentx + arcx, currenty - arcy, r, math.radians(currdeg), math.radians(currdeg+45))
-		elif currdeg == 180:
-			ctx.arc (currentx+r, currenty, r, math.radians(currdeg), math.radians(currdeg+45))
-		elif currdeg == 225:
-			ctx.arc (currentx+arcx, currenty+arcy, r, math.radians(currdeg), math.radians(currdeg+45))
-		elif currdeg == 270:
-			ctx.arc (currentx, currenty+r, r, math.radians(currdeg), math.radians(currdeg+45))
-		elif currdeg == 315:
-			ctx.arc (currentx - arcx, currenty + arcy, r, math.radians(currdeg), math.radians(currdeg+45))
-		elif currdeg == 360:
-			ctx.arc (currentx-r, currenty, r, math.radians(currdeg), math.radians(currdeg+45))
+	def buildit(self, pieces):
+		for p in pieces:
+			self.add(p)
+		self.finish()
 
-		if currdeg == 360:
-			currdeg = 45
-		else:
-			currdeg = currdeg + 45
+	def add(self,t):
+		if t == 'cr':
+			self.ctx.new_sub_path()
+			if self.currdeg == 0:
+				self.ctx.arc (self.currentx, self.currenty+self.r, self.r, math.radians(self.currdeg-90), math.radians(self.currdeg+45-90))
+			elif self.currdeg == 45:
+				self.ctx.arc (self.currentx - self.arcx, self.currenty + self.arcy, self.r, math.radians(self.currdeg-90), math.radians(self.currdeg+45-90))
+			elif self.currdeg == 90:
+				self.ctx.arc (self.currentx - self.r, self.currenty, self.r, math.radians(self.currdeg-90), math.radians(self.currdeg+45-90))
+			elif self.currdeg == 135:
+				self.ctx.arc (self.currentx -self.arcx, self.currenty -self.arcy, self.r, math.radians(self.currdeg-90), math.radians(self.currdeg+45-90))
+			elif self.currdeg == 180:
+				self.ctx.arc (self.currentx, self.currenty-self.r, self.r, math.radians(self.currdeg-90), math.radians(self.currdeg+45-90))
+			elif self.currdeg == 225:
+				self.ctx.arc (self.currentx+self.arcx, self.currenty-self.arcy, self.r, math.radians(self.currdeg-90), math.radians(self.currdeg+45-90))
+			elif self.currdeg == 270:
+				self.ctx.arc (self.currentx+self.r, self.currenty, self.r, math.radians(self.currdeg-90), math.radians(self.currdeg+45-90))
+			elif self.currdeg == 315:
+				self.ctx.arc (self.currentx+self.arcx, self.currenty+self.arcy, self.r, math.radians(self.currdeg-90), math.radians(self.currdeg+45-90))
+			elif self.currdeg == 360:
+				self.ctx.arc (self.currentx, self.currenty+self.r, self.r, math.radians(self.currdeg-90), math.radians(self.currdeg+45-90))
 
-	if t == 'cl':
-		ctx.new_sub_path()
-		if currdeg == 0:
-			ctx.arc_negative (currentx+r, currenty, r, math.radians(currdeg-180), math.radians(currdeg-180-45))
-		elif currdeg == 45:
-			ctx.arc_negative (currentx + arcx, currenty + arcy, r, math.radians(currdeg-180), math.radians(currdeg-180-45))
-		elif currdeg == 90:
-			ctx.arc_negative (currentx, currenty+r, r, math.radians(currdeg-180), math.radians(currdeg-180-45))
-		elif currdeg == 135:
-			ctx.arc_negative (currentx - arcx, currenty + arcy, r, math.radians(currdeg-180), math.radians(currdeg-180-45))
-		elif currdeg == 180:
-			ctx.arc_negative (currentx-r, currenty, r, math.radians(currdeg-180), math.radians(currdeg-180-45))
-		elif currdeg == 225:
-			ctx.arc_negative (currentx -arcx, currenty-arcy, r, math.radians(currdeg-180), math.radians(currdeg-180-45))
-		elif currdeg == 270:
-			ctx.arc_negative (currentx, currenty-r, r, math.radians(currdeg-180), math.radians(currdeg-180-45))
-		elif currdeg == 315:
-			ctx.arc_negative (currentx + arcx, currenty - arcy, r, math.radians(currdeg-180), math.radians(currdeg-180-45))
-		elif currdeg == 360:
-			ctx.arc_negative (currentx, currenty, r, math.radians(currdeg-180), math.radians(currdeg-180-45))
+			if self.currdeg == 360:
+				self.currdeg = 45
+			else:
+				self.currdeg = self.currdeg + 45
 
-		if currdeg == 0:
-			currdeg = 315
-		else:
-			currdeg = currdeg - 45
+		if t == 'cl':
+			self.ctx.new_sub_path()
+			if self.currdeg == 0:
+				self.ctx.arc_negative (self.currentx, self.currenty-self.r, self.r, math.radians(self.currdeg+90), math.radians(self.currdeg-45+90))
+			elif self.currdeg == 45:
+				self.ctx.arc_negative (self.currentx+self.arcx, self.currenty-self.arcy, self.r, math.radians(self.currdeg+90), math.radians(self.currdeg-45+90))
+			elif self.currdeg == 90:
+				self.ctx.arc_negative (self.currentx+self.r, self.currenty, self.r, math.radians(self.currdeg+90), math.radians(self.currdeg-45+90))
+			elif self.currdeg == 135:
+				self.ctx.arc_negative (self.currentx+self.arcx, self.currenty+self.arcy, self.r, math.radians(self.currdeg+90), math.radians(self.currdeg-45+90))
+			elif self.currdeg == 180:
+				self.ctx.arc_negative (self.currentx, self.currenty+self.r, self.r, math.radians(self.currdeg+90), math.radians(self.currdeg-45+90))
+			elif self.currdeg == 225:
+				self.ctx.arc_negative (self.currentx-self.arcx, self.currenty+self.arcy, self.r, math.radians(self.currdeg+90), math.radians(self.currdeg-45+90))
+			elif self.currdeg == 270:
+				self.ctx.arc_negative (self.currentx-self.r, self.currenty, self.r, math.radians(self.currdeg+90), math.radians(self.currdeg-45+90))
+			elif self.currdeg == 315:
+				self.ctx.arc_negative (self.currentx-self.arcx, self.currenty-self.arcy, self.r, math.radians(self.currdeg+90), math.radians(self.currdeg-45+90))
+			elif self.currdeg == 360:
+				self.ctx.arc_negative (self.currentx, self.currenty, self.r, math.radians(self.currdeg+90), math.radians(self.currdeg-45+90))
 
-	elif t == 's':
-		if currdeg == 0:
-			ctx.line_to (currentx, currenty+r)
-		elif currdeg == 45:
-			ctx.line_to (currentx, currenty+r)
-		elif currdeg == 90:
-			ctx.line_to (currentx, currenty+r)
-		elif currdeg == 135:
-			ctx.line_to (currentx, currenty+r)
-		elif currdeg == 180:
-			ctx.line_to (currentx, currenty-r)
-		elif currdeg == 225:
-			ctx.line_to (currentx, currenty+r)
-		elif currdeg == 270:
-			ctx.line_to (currentx+r, currenty)
-		elif currdeg == 315:
-			ctx.line_to (currentx+math.sqrt(math.pow(r,2)/2), currenty+math.sqrt(math.pow(r,2)/2))
-		elif currdeg == 360:
-			ctx.line_to (currentx, currenty+r)
+			if self.currdeg == 0:
+				self.currdeg = 315
+			else:
+				self.currdeg = self.currdeg - 45
 
-	currentx, currenty = ctx.get_current_point()
+		elif t == 's':
+			if self.currdeg == 0:
+				self.ctx.line_to (self.currentx+self.r, self.currenty)
+			elif self.currdeg == 45:
+				self.ctx.line_to (self.currentx+math.sqrt(math.pow(self.r,2)/2), self.currenty+math.sqrt(math.pow(self.r,2)/2))
+			elif self.currdeg == 90:
+				self.ctx.line_to (self.currentx, self.currenty+self.r)
+			elif self.currdeg == 135:
+				self.ctx.line_to (self.currentx-math.sqrt(math.pow(self.r,2)/2), self.currenty+math.sqrt(math.pow(self.r,2)/2))
+			elif self.currdeg == 180:
+				self.ctx.line_to (self.currentx-self.r, self.currenty)
+			elif self.currdeg == 225:
+				self.ctx.line_to (self.currentx-math.sqrt(math.pow(self.r,2)/2), self.currenty-math.sqrt(math.pow(self.r,2)/2))
+			elif self.currdeg == 270:
+				self.ctx.line_to (self.currentx, self.currenty-self.r)
+			elif self.currdeg == 315:
+				self.ctx.line_to (self.currentx+math.sqrt(math.pow(self.r,2)/2), self.currenty-math.sqrt(math.pow(self.r,2)/2))
+			elif self.currdeg == 360:
+				self.ctx.line_to (self.currentx+self.r, self.currenty)
 
-if __name__ == "__main__":
-	#pieces = "cr cr cr cr cr cr s s cl cl cl cl cl cl s s".split()
-	#pieces = "cr cr cr cr cr cr s s cl cl cl cl cl cl s s".split()
-	pieces = "cr cr cr cr cl cr cr cr s cr cr cr cl".split() # doesnt get back
-	#pieces = "cr cr cr cr s s cr cr cr s cr cr cl".split() # doesnt get back
-	#pieces = "c c c c c c c c ".split()
-	#pieces = "c c c c s c c c c s".split()
-	#pieces = "c c".split()
-	print(pieces)
-	if ctx.has_current_point():
-		print("has current")
-	else:
-		print("has no current")
-	ctx.move_to (startx, starty)
-	#ctx.line_to (startx, starty)
-	currentx, currenty = ctx.get_current_point()
-	print('current: ',currentx,currenty,currdeg)
-	x = 0.0
-	for p in pieces:
-		if x == 1.0:
-			x = 0.0
-		else:
-			x = 1.0
-		print('x: ', x)
-		#ctx.set_source_rgb(0.0, x, x)
-		print(p)
-		add(p)
-		print('current: ',currentx,currenty,currdeg)
-		ctx.stroke()
+		self.currentx, self.currenty = self.ctx.get_current_point()
 
-	surface.write_to_png ("example.png")
+	def getCurrentPoint(self):
+		return self.currentx, self.currenty
+
+	def finish(self):
+		self.ctx.stroke()
+		self.surface.write_to_png ("example.png")

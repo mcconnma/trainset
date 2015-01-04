@@ -2,3 +2,4 @@ a.out
 build
 *.autosave
 example.png
+__pycache__
