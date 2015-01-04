@@ -45,7 +45,6 @@ def add(t):
 			currdeg = 45
 		else:
 			currdeg = currdeg + 45
-
 	if t == 'cl':
 		ctx.new_sub_path()
 		if currdeg == 0:
@@ -66,12 +65,7 @@ def add(t):
 			ctx.arc_negative (currentx + arcx, currenty - arcy, r, math.radians(currdeg-180), math.radians(currdeg-180-45))
 		elif currdeg == 360:
 			ctx.arc_negative (currentx, currenty, r, math.radians(currdeg-180), math.radians(currdeg-180-45))
-
-		if currdeg == 0:
-			currdeg = 315
-		else:
-			currdeg = currdeg - 45
-
+		currdeg = currdeg - 45 
 	elif t == 's':
 		if currdeg == 0:
 			ctx.line_to (currentx, currenty+r)
@@ -94,34 +88,35 @@ def add(t):
 
 	currentx, currenty = ctx.get_current_point()
 
+#  drawarc(4,True)
+#  drawarc(1,False)
+#  drawarc(3,True)
+#  goforward(1)
+#  drawarc(3,True)
+#  drawarc(1,False)
+
+#  drawarc(4,True)
+#  goforward(2)
+#  drawarc(3,True)
+#  goforward(1)
+#  drawarc(2,True)
+#  drawarc(1,False)
+
+
+
 if __name__ == "__main__":
-	#pieces = "cr cr cr cr cr cr s s cl cl cl cl cl cl s s".split()
-	#pieces = "cr cr cr cr cr cr s s cl cl cl cl cl cl s s".split()
-	pieces = "cr cr cr cr cl cr cr cr s cr cr cr cl".split() # doesnt get back
-	#pieces = "cr cr cr cr s s cr cr cr s cr cr cl".split() # doesnt get back
-	#pieces = "c c c c c c c c ".split()
-	#pieces = "c c c c s c c c c s".split()
-	#pieces = "c c".split()
-	print(pieces)
-	if ctx.has_current_point():
-		print("has current")
-	else:
-		print("has no current")
-	ctx.move_to (startx, starty)
-	#ctx.line_to (startx, starty)
+	x = 0.5
+	ctx.set_source_rgb(0.0, 0.0, 0.0)
+	ctx.move_to (0, starty)
+	ctx.line_to (startx, starty)
 	currentx, currenty = ctx.get_current_point()
 	print('current: ',currentx,currenty,currdeg)
-	x = 0.0
-	for p in pieces:
-		if x == 1.0:
-			x = 0.0
-		else:
-			x = 1.0
-		print('x: ', x)
-		#ctx.set_source_rgb(0.0, x, x)
-		print(p)
-		add(p)
-		print('current: ',currentx,currenty,currdeg)
-		ctx.stroke()
+	ctx.stroke_preserve()
 
+	#ctx.move_to (currentx, currenty)
+	ctx.set_source_rgb(1, 0, 0)
+	ctx.line_to (startx, 0)
+	currentx, currenty = ctx.get_current_point()
+	print('current: ',currentx,currenty,currdeg)
+	ctx.stroke ()
 	surface.write_to_png ("example.png")
