@@ -1,4 +1,2 @@
-a = %w{c c c c c c c c c c c c s s s s}
-#a = %w{c c c c c c }
-puts a.permutation(16).count
-
+a = %w{c c s }
+print(a.permutation(2).to_a)

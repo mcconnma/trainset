@@ -5,8 +5,8 @@
 int main()
 {
 		int count = 0;
-    //std::string s = "ccccccccccccssss";
-    std::string s = "ccc";
+    std::string s = "ccccccccccccssss";
+    //std::string s = "aac";
     std::sort(s.begin(), s.end());
     do {
         std::cout << s << '\n';
