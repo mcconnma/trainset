@@ -1,5 +1,5 @@
 a.out
 build
 *.autosave
-example.png
+*.png
 __pycache__

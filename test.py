@@ -24,8 +24,8 @@ from draw import TrackBuilder
 class TestPaths(unittest.TestCase):
 
 	def setUp(self):
-		self.startpoint = (500,500)
 		self.tb = TrackBuilder()
+		self.startpoint = self.tb.getCurrentPoint()
 
 	def tearDown(self):
 		print('current after test: ', self.tb.getCurrentPoint())

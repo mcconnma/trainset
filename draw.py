@@ -6,10 +6,10 @@ import cairo
 class TrackBuilder():
 
 	def __init__(self):
-		self.r = 100.0
-		self.WIDTH, self.HEIGHT = 10*self.r, 10*self.r
-		self.startx = 5*self.r
-		self.starty = 5*self.r
+		self.r = 50.0
+		self.WIDTH, self.HEIGHT = 7*self.r, 7*self.r
+		self.startx = self.WIDTH/2
+		self.starty = self.HEIGHT/2
 		self.currentx = 0.0
 		self.currenty = 0.0
 		self.currdeg = 0
@@ -17,12 +17,23 @@ class TrackBuilder():
 		self.arcy = math.sin(math.radians(45)) * self.r
 		self.surface = cairo.ImageSurface (cairo.FORMAT_ARGB32, int(self.WIDTH), int(self.HEIGHT))
 		self.ctx = cairo.Context (self.surface)
+		self.fillbackground()
 		self.ctx.move_to (self.startx, self.starty)
 		self.ctx.arc(self.startx, self.starty, 5, 0, 2*math.pi)
 		self.ctx.set_source_rgb(0.3, 0.4, 0.6)
 		self.ctx.fill()
 		self.ctx.move_to (self.startx, self.starty)
 		self.currentx, self.currenty = self.ctx.get_current_point()
+
+	def fillbackground(self):
+		(x, y, z) = self.rgb(65, 65, 65)
+		self.ctx.set_source_rgb(x, y, z)
+		#self.ctx.set_source_rgb(self.rgb(214, 104, 54))
+		self.ctx.rectangle(0, 0, self.WIDTH, self.HEIGHT)
+		self.ctx.fill()
+
+	def rgb(self,x,y,z):
+		return (x/255, y/255, z/255)
 
 	def buildit(self, pieces):
 		for p in pieces:
@@ -48,13 +59,10 @@ class TrackBuilder():
 				self.ctx.arc (self.currentx+self.r, self.currenty, self.r, math.radians(self.currdeg-90), math.radians(self.currdeg+45-90))
 			elif self.currdeg == 315:
 				self.ctx.arc (self.currentx+self.arcx, self.currenty+self.arcy, self.r, math.radians(self.currdeg-90), math.radians(self.currdeg+45-90))
-			elif self.currdeg == 360:
-				self.ctx.arc (self.currentx, self.currenty+self.r, self.r, math.radians(self.currdeg-90), math.radians(self.currdeg+45-90))
 
+			self.currdeg = self.currdeg + 45
 			if self.currdeg == 360:
-				self.currdeg = 45
-			else:
-				self.currdeg = self.currdeg + 45
+				self.currdeg = 0 
 
 		if t == 'cl':
 			self.ctx.new_sub_path()
@@ -74,13 +82,10 @@ class TrackBuilder():
 				self.ctx.arc_negative (self.currentx-self.r, self.currenty, self.r, math.radians(self.currdeg+90), math.radians(self.currdeg-45+90))
 			elif self.currdeg == 315:
 				self.ctx.arc_negative (self.currentx-self.arcx, self.currenty-self.arcy, self.r, math.radians(self.currdeg+90), math.radians(self.currdeg-45+90))
-			elif self.currdeg == 360:
-				self.ctx.arc_negative (self.currentx, self.currenty, self.r, math.radians(self.currdeg+90), math.radians(self.currdeg-45+90))
 
 			if self.currdeg == 0:
-				self.currdeg = 315
-			else:
-				self.currdeg = self.currdeg - 45
+				self.currdeg = 360
+			self.currdeg = self.currdeg - 45
 
 		elif t == 's':
 			if self.currdeg == 0:
@@ -99,8 +104,6 @@ class TrackBuilder():
 				self.ctx.line_to (self.currentx, self.currenty-self.r)
 			elif self.currdeg == 315:
 				self.ctx.line_to (self.currentx+math.sqrt(math.pow(self.r,2)/2), self.currenty-math.sqrt(math.pow(self.r,2)/2))
-			elif self.currdeg == 360:
-				self.ctx.line_to (self.currentx+self.r, self.currenty)
 
 		self.currentx, self.currenty = self.ctx.get_current_point()
 
