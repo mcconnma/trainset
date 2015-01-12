@@ -7,7 +7,7 @@ using namespace std;
  
 int main()
 {
-	string s = "211112";
+	string s = "ccs";
 	//vector<int> s = {2,1,1,1,1,2};
 	sort(s.begin(), s.end());
 	for (auto it = s.rbegin(); it != s.rend(); ++it) {
