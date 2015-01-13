@@ -12,7 +12,7 @@ class TrackBuilder():
 		self.starty = self.HEIGHT/2
 		self.currentx = 0.0
 		self.currenty = 0.0
-		self.currdeg = 0
+		self.currdeg = 270
 		self.arcx = math.cos(math.radians(45)) * self.r
 		self.arcy = math.sin(math.radians(45)) * self.r
 		self.surface = cairo.ImageSurface (cairo.FORMAT_ARGB32, int(self.WIDTH), int(self.HEIGHT))
@@ -24,6 +24,7 @@ class TrackBuilder():
 		self.ctx.fill()
 		self.ctx.move_to (self.startx, self.starty)
 		self.currentx, self.currenty = self.ctx.get_current_point()
+		self.dowrite = False
 
 	def fillbackground(self):
 		(x, y, z) = self.rgb(65, 65, 65)
@@ -111,5 +112,6 @@ class TrackBuilder():
 		return self.currentx, self.currenty
 
 	def finish(self):
-		self.ctx.stroke()
-		self.surface.write_to_png ("example.png")
+		if self.dowrite:
+			self.ctx.stroke()
+			self.surface.write_to_png ("example.png")

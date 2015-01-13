@@ -25,6 +25,7 @@ class TestPaths(unittest.TestCase):
 
 	def setUp(self):
 		self.tb = TrackBuilder()
+		self.tb.dowrite = True
 		self.startpoint = self.tb.getCurrentPoint()
 
 	def tearDown(self):
@@ -60,6 +61,16 @@ class TestPaths(unittest.TestCase):
 
 	def test8(self):
 		self.tb.buildit("cl cl cl cl s cl cl cl cl s".split())
+		self.assertTrue(self.startpoint == self.tb.getCurrentPoint())
+
+	@unittest.skip("demonstrating skipping")
+	def test9(self):
+		self.tb.buildit("cr cr cr cr s s cr cr cr s cr cr cl".split()) # doesnt get back
+		self.assertTrue(self.startpoint == self.tb.getCurrentPoint())
+
+	@unittest.skip("demonstrating skipping")
+	def test9(self):
+		self.tb.buildit("cr cr cr cr cl cr cr cr s cr cr cr cl".split()) # doesnt get back
 		self.assertTrue(self.startpoint == self.tb.getCurrentPoint())
 
 if __name__ == '__main__':
