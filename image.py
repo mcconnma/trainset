@@ -1,4 +1,6 @@
-import Image
+#!/usr/bin/python3
+
+from PIL import Image
 
 blank_image = Image.new("RGB", (1050, 350))
 
