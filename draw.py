@@ -5,9 +5,10 @@ import cairo
 
 class TrackBuilder():
 
-	def __init__(self):
-		self.r = 50.0
-		self.WIDTH, self.HEIGHT = 7*self.r, 7*self.r
+	def __init__(self, id = 0):
+		self.id = id
+		self.r = 40.0
+		self.WIDTH = 400; self.HEIGHT = 400 
 		self.startx = self.WIDTH/2
 		self.starty = self.HEIGHT/2
 		self.currentx = 0.0
@@ -15,22 +16,34 @@ class TrackBuilder():
 		self.currdeg = 270
 		self.arcx = math.cos(math.radians(45)) * self.r
 		self.arcy = math.sin(math.radians(45)) * self.r
+		self.dowritefile = False
 		self.surface = cairo.ImageSurface (cairo.FORMAT_ARGB32, int(self.WIDTH), int(self.HEIGHT))
 		self.ctx = cairo.Context (self.surface)
-		self.fillbackground()
+		self.ctx.move_to (self.startx, self.starty)
+		self.currentx, self.currenty = self.ctx.get_current_point()
+
+	def initimage(self):
+
+		# draw a background
+		(x, y, z) = self.rgb(65, 65, 65)
+		self.ctx.set_source_rgb(x, y, z)
+		self.ctx.rectangle(0, 0, self.WIDTH, self.HEIGHT)
+		self.ctx.fill()
+
+		# draw a border 
+		(x, y, z) = self.rgb(165, 165, 165)
+		self.ctx.set_source_rgb(x, y, z)
+		self.ctx.rectangle(0.0, 0.0, self.WIDTH, self.HEIGHT);
+		self.ctx.stroke();
+
+		# draw the id of the image
+		self.ctx.move_to(5, 10)
+		self.ctx.show_text(str(self.id))
+
+		# draw point to represent starting point
 		self.ctx.move_to (self.startx, self.starty)
 		self.ctx.arc(self.startx, self.starty, 5, 0, 2*math.pi)
 		self.ctx.set_source_rgb(0.3, 0.4, 0.6)
-		self.ctx.fill()
-		self.ctx.move_to (self.startx, self.starty)
-		self.currentx, self.currenty = self.ctx.get_current_point()
-		self.dowrite = False
-
-	def fillbackground(self):
-		(x, y, z) = self.rgb(65, 65, 65)
-		self.ctx.set_source_rgb(x, y, z)
-		#self.ctx.set_source_rgb(self.rgb(214, 104, 54))
-		self.ctx.rectangle(0, 0, self.WIDTH, self.HEIGHT)
 		self.ctx.fill()
 
 	def rgb(self,x,y,z):
@@ -112,6 +125,8 @@ class TrackBuilder():
 		return self.currentx, self.currenty
 
 	def finish(self):
-		if self.dowrite:
+
+		if self.dowritefile:
+			self.initimage()
 			self.ctx.stroke()
-			self.surface.write_to_png ("example.png")
+			self.surface.write_to_png ("solution" + str(self.id) + ".png")
