@@ -5,6 +5,8 @@
 #include <list>
 #include <algorithm>
 #include <exception>
+#include <cstdlib>
+#include <cstdio>
 
 using std::cout;
 using std::endl;
@@ -34,6 +36,16 @@ class TestException : public exception {
 
 };
 
+void print_ip(int ip)
+{
+    unsigned char bytes[4];
+    bytes[0] = ip & 0xFF;
+    bytes[1] = (ip >> 8) & 0xFF;
+    bytes[2] = (ip >> 16) & 0xFF;
+    bytes[3] = (ip >> 24) & 0xFF;	
+    printf("%d.%d.%d.%d\n", bytes[3], bytes[2], bytes[1], bytes[0]);        
+}
+
 class Test {
 
 public:
@@ -50,6 +62,18 @@ private:
 	string s;
 
 };
+
+void testarray() {
+	
+	int SIZE = 2;
+
+	string t[] = { "hello", "mark" };
+
+	for (int i = 0; i < SIZE; i++) {
+		cout << t[i] << endl;
+	}
+
+}
 
 
 string reverseit(string& in) {
@@ -111,5 +135,9 @@ int main(int argc, char **argv) {
 	cout << "reverseit: " << reverseit(s) << endl;
 	Derived D;
 	cout << "getit: " << D.getIt() << endl;
+
+	testarray();
+
+	print_ip(1249295239);
 
 }

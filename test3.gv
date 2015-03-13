@@ -1,0 +1,16 @@
+digraph{
+{0 [label="start"]}->{a1 [label="cl"]}
+{0 [label="start"]}->{a2 [label="s"]}
+{0 [label="start"]}->{a3 [label="cr"]}
+
+{a1}->{b1 [label="cl"]}
+{a1}->{b2 [label="s"]}
+{a1}->{b3 [label="cr"]}
+{a2}->{b4 [label="cl"]}
+{a2}->{b5 [label="s"]}
+{a2}->{b6 [label="cr"]}
+{a3}->{b7 [label="cl"]}
+{a3}->{b8 [label="s"]}
+{a3}->{b9 [label="cr"]}
+
+};
