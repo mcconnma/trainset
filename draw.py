@@ -124,6 +124,11 @@ class TrackBuilder():
 	def getCurrentPoint(self):
 		return self.currentx, self.currenty
 
+	def createImage(self, id):
+		#self.initimage()
+		self.ctx.stroke()
+		self.surface.write_to_png ("solution" + str(id) + ".png")
+
 	def finish(self):
 
 		if self.dowritefile:
