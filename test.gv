@@ -1,9 +1,0 @@
-digraph unix {
-	"start"->"cl";
-	"start"->"s";
-	"start"->"cr";
-	"cr"->"cl";
-	"cr"->"s";
-	"cr"->"cr";
-}
-

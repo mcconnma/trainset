@@ -1,9 +1,9 @@
-#!/usr/bin/python3
+#!/usr/bin/python2.7
 
 import random
 import unittest
 from draw import TrackBuilder
-from PIL import Image
+#from PIL import Image
 import glob
 import os
 
@@ -15,28 +15,28 @@ class TestPaths(unittest.TestCase):
 		for s in previous:
 			os.remove(s)
 
-	@classmethod
-	def tearDownClass(cls):
-		solutions = sorted(glob.glob('*.png'))
-		blank = Image.new("RGB", (1200, 4800))
-		x=0; y=0
-		c = 1
-		for s in solutions:
-			im = Image.open(s)
-			print(x,y)
-			blank.paste(im, (x,y))
-			x = (x + 400) % 1200
-			y = ((c // 3) * 400)
-			c += 1
-		blank.show()
+#	@classmethod
+#	def tearDownClass(cls):
+#		solutions = sorted(glob.glob('*.png'))
+#		blank = Image.new("RGB", (1200, 4800))
+#		x=0; y=0
+#		c = 1
+#		for s in solutions:
+#			im = Image.open(s)
+#			print(x,y)
+#			blank.paste(im, (x,y))
+#			x = (x + 400) % 1200
+#			y = ((c // 3) * 400)
+#			c += 1
+#		blank.show()
 
 	def setUp(self):
 		self.tb = TrackBuilder()
 		self.tb.dowritefile = True
 		self.startpoint = self.tb.getCurrentPoint()
 
-	def tearDown(self):
-		print('current after test: ', self.tb.getCurrentPoint())
+#	def tearDown(self):
+#		print('current after test: ', self.tb.getCurrentPoint())
 
 	def test1(self):
 		self.tb.id = 1

@@ -1,4 +1,0 @@
-digraph{
-	cl [label="cr"]; s [label="s"]; cr [label="cr"];
-	"start"->cl
-}
