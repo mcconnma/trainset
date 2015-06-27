@@ -10,10 +10,18 @@ import os
 class TestPaths(unittest.TestCase):
 
 	@classmethod
-	def setUpClass(cls):
-		previous = glob.glob('*.png')
-		for s in previous:
+	def remove(cls):
+		files = glob.glob('*.png')
+		for s in files:
 			os.remove(s)
+
+	@classmethod
+	def setUpClass(cls):
+		TestPaths.remove()
+
+	@classmethod
+	def tearDownClass(cls):
+		TestPaths.remove()
 
 #	@classmethod
 #	def tearDownClass(cls):
