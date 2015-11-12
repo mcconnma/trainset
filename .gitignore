@@ -2,4 +2,6 @@ a.out
 build
 *.autosave
 *.png
+!tree.png
+*.pyc
 __pycache__
