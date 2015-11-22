@@ -8,16 +8,6 @@ from trackbuilder import TrackBuilder
 
 solutions = []
 
-def add_children(path, depth):
-	if (depth == 1):
-		yield path + ['cl']
-		yield path + ['s']
-		yield path + ['cr']
-	else:
-		for p in add_children(path + ['cl'], depth - 1): yield p
-		for p in add_children(path + ['s'], depth - 1): yield p
-		for p in add_children(path + ['cr'], depth - 1): yield p
-
 def convert(i):
 	if i == 's':
 		return i
@@ -44,11 +34,12 @@ def duplicate(path):
 def truncatepath(path):
 	return str.join('', path)
 
+NUM_CL	= 6
+NUM_CR	= 6
+NUM_S		= 4
 def valid(l):
-	NUM_CL	= 6
-	NUM_CR	= 6
-	NUM_S		= 4
-	return (l.count('cl') + l.count('cr') <= NUM_CL + NUM_CR) and l.count('s') <= NUM_S 	
+	# the curves are reversible so we need to check that number <= cl + cr
+	return (l.count('cl') + l.count('cr') <= NUM_CL + NUM_CR) and l.count('s') <= NUM_S
 
 def removefiles(depth):
 	files = glob.glob(depth + '*.png')
@@ -63,11 +54,22 @@ def testpath(tb, path):
 	end_deg = tb.getCurrentDegree()
 	return start_point == end_point and start_deg == end_deg
 
+def add_children(path, depth):
+	if (depth == 1):
+		yield path + ['cl']
+		yield path + ['s']
+		yield path + ['cr']
+	else:
+		for p in add_children(path + ['cl'], depth - 1): yield p
+		for p in add_children(path + ['s'], depth - 1): yield p
+		for p in add_children(path + ['cr'], depth - 1): yield p
+
 def build_tree(depth):
 	r = []
 	i = 0
 	for path in add_children(r, depth):
 		i = i+1
+		# check that the path is valid and not a duplicate (mirror image or rotated) as building path is expensive
 		if not valid(path):
 			continue
 		if duplicate(path):
@@ -82,4 +84,5 @@ def build_tree(depth):
 
 depth = int(sys.argv[1])
 removefiles(str(depth))
-cProfile.run('build_tree(depth)')
+#cProfile.run('build_tree(depth)')
+build_tree(depth)
