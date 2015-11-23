@@ -16,23 +16,20 @@ def convert(i):
 	elif i == 'cr':
 		return 'cl'
 
+# this could be made more efficient ...
 def duplicate(path):
-
-	# rotate list, check for duplicates
-	for x in range(1,5):
-		p = path[x:]+path[:x]
-		if solutions.count(p) == 1:
+	s2 = ''.join(path)
+	cpath = [convert(x) for x in path]
+	s2cpath = ''.join(cpath)
+	for s in solutions:
+		s1 = ''.join(s*2)
+		# check dups
+		if s1.find(s2) != -1:
 			return True
-
-	# check for mirror images
-	convertedpath = [convert(x) for x in path]
-	for x in range(0,5):
-		p = convertedpath[x:]+convertedpath[:x]
-		if solutions.count(p) == 1:
+		# check mirrors
+		if s1.find(s2cpath) != -1:
 			return True
-
-def truncatepath(path):
-	return str.join('', path)
+	return False
 
 NUM_CL	= 6
 NUM_CR	= 6
@@ -69,13 +66,12 @@ def build_tree(depth):
 	i = 0
 	for path in add_children(r, depth):
 		i = i+1
-		# check that the path is valid and not a duplicate (mirror image or rotated) as building path is expensive
 		if not valid(path):
-			continue
-		if duplicate(path):
 			continue
 		tb = TrackBuilder(str(path))
 		if testpath(tb, path):
+			if duplicate(path):
+				continue
 			solutions.append(path)
 			imageid = str(depth) + '-' + str(i)
 			tb.createImage(imageid)
@@ -84,5 +80,5 @@ def build_tree(depth):
 
 depth = int(sys.argv[1])
 removefiles(str(depth))
-#cProfile.run('build_tree(depth)')
-build_tree(depth)
+cProfile.run('build_tree(depth)')
+#build_tree(depth)
