@@ -64,11 +64,12 @@ def add_children(path, depth):
 def build_tree(depth):
 	r = []
 	i = 0
+	tb = TrackBuilder()
 	for path in add_children(r, depth):
 		i = i+1
+		tb.init(path)
 		if not valid(path):
 			continue
-		tb = TrackBuilder(str(path))
 		if testpath(tb, path):
 			if duplicate(path):
 				continue
@@ -80,5 +81,5 @@ def build_tree(depth):
 
 depth = int(sys.argv[1])
 removefiles(str(depth))
-cProfile.run('build_tree(depth)')
-#build_tree(depth)
+#cProfile.run('build_tree(depth)')
+build_tree(depth)

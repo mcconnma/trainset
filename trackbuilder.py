@@ -3,8 +3,14 @@ import cairo
 
 class TrackBuilder():
 
-	def __init__(self, id):
-		self.id = id
+	def init(self, path):
+		self.path = path 
+		self.surface = cairo.ImageSurface (cairo.FORMAT_ARGB32, int(self.WIDTH), int(self.HEIGHT))
+		self.ctx = cairo.Context (self.surface)
+		self.ctx.move_to (self.startx, self.starty)
+		self.currentx, self.currenty = self.ctx.get_current_point()
+
+	def __init__(self):
 		self.r = 40.0
 		self.WIDTH = 400; self.HEIGHT = 400 
 		self.startx = self.WIDTH/2
@@ -15,25 +21,14 @@ class TrackBuilder():
 		self.arcx = math.cos(math.radians(45)) * self.r
 		self.arcy = math.sin(math.radians(45)) * self.r
 		self.linewidth = 5
-		self.surface = cairo.ImageSurface (cairo.FORMAT_ARGB32, int(self.WIDTH), int(self.HEIGHT))
-		self.ctx = cairo.Context (self.surface)
-		self.ctx.move_to (self.startx, self.starty)
-		self.currentx, self.currenty = self.ctx.get_current_point()
-		self.initimage()
-
-	def reset(self):
-		pass
 
 	def initimage(self):
 
 		# draw a background
-		def drawbackground(self):
-			(x, y, z) = self.rgb(255,255,255)
-			self.ctx.set_source_rgb(x, y, z)
-			self.ctx.rectangle(0, 0, self.WIDTH, self.HEIGHT)
-			self.ctx.fill()
-
-		drawbackground(self)
+		(x, y, z) = self.rgb(255,255,255)
+		self.ctx.set_source_rgb(x, y, z)
+		self.ctx.rectangle(0, 0, self.WIDTH, self.HEIGHT)
+		self.ctx.fill()
 
 		# draw a border 
 		(x, y, z) = self.rgb(165, 165, 165)
@@ -41,9 +36,9 @@ class TrackBuilder():
 		self.ctx.rectangle(0.0, 0.0, self.WIDTH, self.HEIGHT);
 		self.ctx.stroke();
 
-		# draw the id of the image
+		# draw the path of the image
 		self.ctx.move_to(5, 10)
-		self.ctx.show_text(self.id)
+		self.ctx.show_text(str(self.path))
 
 		# draw point to represent starting point
 		self.ctx.move_to (self.startx, self.starty)
@@ -135,9 +130,13 @@ class TrackBuilder():
 	def getCurrentDegree(self):
 		return self.currdeg
 
-	def createImage(self, id):
+	def createImage(self, imageid):
+		self.init(self.path)
+		self.initimage()
+		self.buildit(self.path)
 		self.ctx.stroke()
+
 		# draw the id of the image
 		self.ctx.move_to(5, 25)
-		self.ctx.show_text(id)
-		self.surface.write_to_png (str(id) + ".png")
+		self.ctx.show_text(imageid)
+		self.surface.write_to_png (imageid + ".png")
