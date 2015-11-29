@@ -31,8 +31,8 @@ public:
 protected:
 
 	void init(std::string path) {
-		path = path;
-		surface = cairo_image_surface_create (FORMAT_ARGB32, WIDTH, HEIGHT);
+		//path = path;
+		//surface = cairo_image_surface_create (FORMAT_ARGB32, WIDTH, HEIGHT);
 		//ctx = cairo.Context (surface)
 		//ctx.move_to (startx, starty)
 		//currentx = ctx.get_current_point()
