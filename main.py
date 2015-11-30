@@ -35,8 +35,15 @@ NUM_CL	= 6
 NUM_CR	= 6
 NUM_S		= 4
 def valid(l):
+	t1 = True
+	# check for valid use of 's'
+	if l.count('s') >= 3:
+		l2 = ''.join(l*2)
+		if l2.find('ss') == -1:
+			t1 = False
 	# the curves are reversible so we need to check that number <= cl + cr
-	return (l.count('cl') + l.count('cr') <= NUM_CL + NUM_CR) and l.count('s') <= NUM_S
+	t2 = (l.count('cl') + l.count('cr') <= NUM_CL + NUM_CR) and l.count('s') <= NUM_S
+	return t1 and t2
 
 def removefiles(depth):
 	files = glob.glob(depth + '*.png')
