@@ -1,8 +1,6 @@
 a.out
 build
 *.autosave
-*.png
 !tree.png
-*.gif
 *.pyc
 __pycache__
