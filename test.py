@@ -23,49 +23,57 @@ class TestPaths(unittest.TestCase):
 		TestPaths.remove()
 
 	def setUp(self):
-		self.tb = TrackBuilder('test')
+		self.tb = TrackBuilder()
+		self.tb.init('test')
 		self.tb.dowritefile = True
-		self.startpoint = self.tb.getCurrentPoint()
+
+	def valid(self, path):
+		start_point = self.tb.getCurrentPoint()
+		start_deg = self.tb.getCurrentDegree()
+		self.tb.buildit(path)
+		end_point = self.tb.getCurrentPoint()
+		end_deg = self.tb.getCurrentDegree()
+		return start_point == end_point and start_deg == end_deg
 
 	def test1(self):
 		self.tb.id = 1
-		self.tb.buildit("s cr s cr s cr s cr s cr s cr s cr s cr".split())
-		self.assertTrue(self.startpoint == self.tb.getCurrentPoint())
+		path = "s cr s cr s cr s cr s cr s cr s cr s cr".split()
+		self.assertTrue(self.valid(path))
 
 	def test2(self):
 		self.tb.id = 5
-		self.tb.buildit("cl cl cl cl cl cl cl cl".split())
-		self.assertTrue(self.startpoint == self.tb.getCurrentPoint())
+		path = "cl cl cl cl cl cl cl cl".split()
+		self.assertTrue(self.valid(path))
 
 	def test3(self):
 		self.tb.id = 3
-		self.tb.buildit("s cl s cl s cl s cl s cl s cl s cl s cl".split())
-		self.assertTrue(self.startpoint == self.tb.getCurrentPoint())
+		path = "s cl s cl s cl s cl s cl s cl s cl s cl".split()
+		self.assertTrue(self.valid(path))
 
 	def test4(self):
 		self.tb.id = 4
-		self.tb.buildit("cl s cl s cl s cl s cl s cl s cl s cl s".split())
-		self.assertTrue(self.startpoint == self.tb.getCurrentPoint())
+		path = "cl s cl s cl s cl s cl s cl s cl s cl s".split()
+		self.assertTrue(self.valid(path))
 
 	def test5(self):
 		self.tb.id = 6
-		self.tb.buildit("cr cr cr cr cr cr cr cr".split())
-		self.assertTrue(self.startpoint == self.tb.getCurrentPoint())
+		path = "cr cr cr cr cr cr cr cr".split()
+		self.assertTrue(self.valid(path))
 
 	def test6(self):
 		self.tb.id = 2
-		self.tb.buildit("cr s cr s cr s cr s cr s cr s cr s cr s".split())
-		self.assertTrue(self.startpoint == self.tb.getCurrentPoint())
+		path = "cr s cr s cr s cr s cr s cr s cr s cr s".split()
+		self.assertTrue(self.valid(path))
 
 	def test7(self):
 		self.tb.id = 7
-		self.tb.buildit("cr cr cr cr s cr cr cr cr s".split())
-		self.assertTrue(self.startpoint == self.tb.getCurrentPoint())
+		path = "cr cr cr cr s cr cr cr cr s".split()
+		self.assertTrue(self.valid(path))
 
 	def test8(self):
 		self.tb.id = 8
-		self.tb.buildit("cl cl cl cl s cl cl cl cl s".split())
-		self.assertTrue(self.startpoint == self.tb.getCurrentPoint())
+		path = "cl cl cl cl s cl cl cl cl s".split()
+		self.assertTrue(self.valid(path))
 
 	@unittest.skip("demonstrating skipping")
 	def test9(self):
