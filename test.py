@@ -75,17 +75,17 @@ class TestPaths(unittest.TestCase):
 		path = "cl cl cl cl s cl cl cl cl s".split()
 		self.assertTrue(self.valid(path))
 
-	@unittest.skip("demonstrating skipping")
 	def test9(self):
 		self.tb.id = 9
-		self.tb.buildit("cr cr cr cr s s cr cr cr s cr cr cl".split()) # doesnt get back
-		self.assertTrue(self.startpoint == self.tb.getCurrentPoint())
+ 		# doesn't get back
+		path = "cr cr cr cr s s cr cr cr s cr cr cl".split()
+		self.assertFalse(self.valid(path))
 
-	@unittest.skip("demonstrating skipping")
 	def test10(self):
 		self.tb.id = 10
-		self.tb.buildit("cr cr cr cr cl cr cr cr s cr cr cr cl".split()) # doesnt get back
-		self.assertTrue(self.startpoint == self.tb.getCurrentPoint())
+ 		# doesn't get back
+		path = "cr cr cr cr cl cr cr cr s cr cr cr cl".split()
+		self.assertFalse(self.valid(path))
 
 if __name__ == '__main__':
 		unittest.main()
