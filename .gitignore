@@ -1,5 +1,6 @@
 a.out
 build
+*.png
 *.autosave
 !tree.png
 *.pyc

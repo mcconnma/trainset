@@ -7,6 +7,9 @@ import cProfile
 from trackbuilder import TrackBuilder
 
 solutions = []
+NUM_CL = 6
+NUM_CR = 6
+NUM_S = 4
 
 def convert(i):
 	if i == 's':
@@ -31,18 +34,15 @@ def duplicate(path):
 			return True
 	return False
 
-NUM_CL	= 6
-NUM_CR	= 6
-NUM_S		= 4
-def valid(l):
+def valid(path):
 	t1 = True
 	# check for valid use of 's'
-	if l.count('s') >= 3:
-		l2 = ''.join(l*2)
+	if path.count('s') >= 3:
+		l2 = ''.join(path * 2)
 		if l2.find('ss') == -1:
 			t1 = False
 	# the curves are reversible so we need to check that number <= cl + cr
-	t2 = (l.count('cl') + l.count('cr') <= NUM_CL + NUM_CR) and l.count('s') <= NUM_S
+	t2 = (path.count('cl') + path.count('cr') <= NUM_CL + NUM_CR) and path.count('s') <= NUM_S
 	return t1 and t2
 
 def removefiles(depth):
@@ -59,14 +59,17 @@ def testpath(tb, path):
 	return start_point == end_point and start_deg == end_deg
 
 def add_children(path, depth):
-	if (depth == 1):
+	if depth == 1:
 		yield path + ['cl']
 		yield path + ['s']
 		yield path + ['cr']
 	else:
-		for p in add_children(path + ['cl'], depth - 1): yield p
-		for p in add_children(path + ['s'], depth - 1): yield p
-		for p in add_children(path + ['cr'], depth - 1): yield p
+		for p in add_children(path + ['cl'], depth - 1):
+			yield p
+		for p in add_children(path + ['s'], depth - 1):
+			yield p
+		for p in add_children(path + ['cr'], depth - 1):
+			yield p
 
 def build_tree(depth):
 	r = []
@@ -86,7 +89,7 @@ def build_tree(depth):
 			print(str(imageid) + ':' + str(path))
 	print("total checked: " + str(i))
 
-depth = int(sys.argv[1])
-removefiles(str(depth))
-#cProfile.run('build_tree(depth)')
-build_tree(depth)
+tree_depth = int(sys.argv[1])
+removefiles(str(tree_depth))
+# cProfile.run('build_tree(tree_depth)')
+build_tree(tree_depth)
