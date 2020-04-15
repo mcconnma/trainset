@@ -7,9 +7,12 @@ import cProfile
 from trackbuilder import TrackBuilder
 
 solutions = []
-NUM_CL = 6
-NUM_CR = 6
-NUM_S = 4
+
+def removefiles(depth):
+	files = glob.glob(depth + '*.png')
+	for file in files:
+		os.remove(file)
+
 
 def convert(i):
 	if i == 's':
@@ -34,29 +37,7 @@ def duplicate(path):
 			return True
 	return False
 
-def valid(path):
-	t1 = True
-	# check for valid use of 's'
-	if path.count('s') >= 3:
-		l2 = ''.join(path * 2)
-		if l2.find('ss') == -1:
-			t1 = False
-	# the curves are reversible so we need to check that number <= cl + cr
-	t2 = (path.count('cl') + path.count('cr') <= NUM_CL + NUM_CR) and path.count('s') <= NUM_S
-	return t1 and t2
 
-def removefiles(depth):
-	files = glob.glob(depth + '*.png')
-	for file in files:
-		os.remove(file)
-
-def testpath(tb, path):
-	start_point = tb.getCurrentPoint()
-	start_deg = tb.getCurrentDegree()
-	tb.buildit(path)
-	end_point = tb.getCurrentPoint()
-	end_deg = tb.getCurrentDegree()
-	return start_point == end_point and start_deg == end_deg
 
 def add_children(path, depth):
 	if depth == 1:
@@ -72,15 +53,25 @@ def add_children(path, depth):
 			yield p
 
 def build_tree(depth):
+
 	r = []
 	i = 0
-	tb = TrackBuilder()
+
+	tb = TrackBuilder(None)
+
 	for path in add_children(r, depth):
+
 		i = i+1
-		tb.init(path)
-		if not valid(path):
+		tb.set_path(path)
+
+		if not tb.is_valid_path():
 			continue
-		if testpath(tb, path):
+		start_point = tb.getCurrentPoint()
+		start_deg = tb.getCurrentDegree()
+		tb.buildit()
+		end_point = tb.getCurrentPoint()
+		end_deg = tb.getCurrentDegree()
+		if start_point == end_point and start_deg == end_deg:
 			if duplicate(path):
 				continue
 			solutions.append(path)

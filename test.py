@@ -23,14 +23,15 @@ class TestPaths(unittest.TestCase):
         TestPaths.remove()
 
     def setUp(self):
-        self.tb = TrackBuilder()
-        self.tb.init('test')
+        self.tb = TrackBuilder(None)
         self.tb.dowritefile = True
 
     def valid(self, path):
+
+        self.tb.set_path(path)
         start_point = self.tb.getCurrentPoint()
         start_deg = self.tb.getCurrentDegree()
-        self.tb.buildit(path)
+        self.tb.buildit()
         end_point = self.tb.getCurrentPoint()
         end_deg = self.tb.getCurrentDegree()
         return start_point == end_point and start_deg == end_deg
@@ -86,6 +87,10 @@ class TestPaths(unittest.TestCase):
         # doesn't get back
         path = "cr cr cr cr cl cr cr cr s cr cr cr cl".split()
         self.assertFalse(self.valid(path))
+
+    def test11(self):
+        path = "cr cr cr cr cl cr cr cr s cr cr cr cl".split()
+        tb = TrackBuilder(path)
 
 if __name__ == '__main__':
     unittest.main()
