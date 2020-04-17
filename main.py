@@ -3,20 +3,11 @@
 import sys
 import os
 import glob
-import cProfile
 import multiprocessing
+import cProfile
 from trackbuilder import TrackBuilder
 
 solutions = []
-
-def convert(i):
-	if i == 's':
-		return i
-	elif i == 'cl':
-		return 'cr'
-	elif i == 'cr':
-		return 'cl'
-
 piece_converter = {'s': 's', 'cl': 'cr', 'cr': 'cl'}
 
 def duplicate(path):
