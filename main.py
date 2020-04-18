@@ -25,6 +25,12 @@ def duplicate(path):
 			return True
 	return False
 
+class TrackBuilderItem(object):
+	__slots__ = ['path_id', 'path']
+	def __init__(self, path_id, path):
+		self.path_id = path_id
+		self.path = path
+
 class TrackBuilderConsumer(multiprocessing.Process):
 
 	def __init__(self, task_queue, result_queue):
@@ -35,14 +41,15 @@ class TrackBuilderConsumer(multiprocessing.Process):
 
 	def run(self):
 		while True:
-			path_id, path = self.task_queue.get()
-			if path_id is None:
+			items = self.task_queue.get()
+			if items is None:
 				self.task_queue.task_done()
 				break
-			self.tb.reset_ctx(path)
-			# if the path completed successfully, add to result queue
-			if self.tb.build(path):
-				self.result_queue.put([path_id, path])
+			for item in items:
+				self.tb.reset_ctx(item.path)
+				# if the path completed successfully, add to result queue
+				if self.tb.build(item.path):
+					self.result_queue.put(item)
 			self.task_queue.task_done()
 		return
 
@@ -63,7 +70,9 @@ def build_tree(path, depth):
 def main():
 
 	total_processed = 0
+	total_valid = 0
 	tree_depth = int(sys.argv[1])
+	task_list = list()
 
 	# remove any existing path images
 	files = glob.glob("%d*.png" % tree_depth)
@@ -72,11 +81,11 @@ def main():
 
 	# create the task and result queues
 	tasks = multiprocessing.JoinableQueue()
-	results = multiprocessing.Queue()
+	result_queue = multiprocessing.Queue()
 
 	# setup consumers and start
 	num_consumers = multiprocessing.cpu_count()
-	consumers = [TrackBuilderConsumer(tasks, results) for i in range(num_consumers)]
+	consumers = [TrackBuilderConsumer(tasks, result_queue) for i in range(num_consumers)]
 	for w in consumers:
 		w.start()
 
@@ -85,19 +94,29 @@ def main():
 		total_processed += 1
 		if not TrackBuilder.is_valid_path(path):
 			continue
-		tasks.put([total_processed, path])
+		total_valid += 1
+		task_list.append(TrackBuilderItem(total_processed, path))
+		if len(task_list) % 1000 == 0:
+			tasks.put(task_list)
+			task_list = list()
+
+	# likely not finished processing
+	if len(task_list) > 0:
+			tasks.put(task_list)
 
 	# add poison pills
 	for i in range(num_consumers):
-		tasks.put([None, None])
+		tasks.put(None)
 
 	# wait for tasks
 	tasks.join()
 
 	# process result queue
 	tb = TrackBuilder()
-	while not results.empty():
-		path_id, path = results.get()
+	while not result_queue.empty():
+		result = result_queue.get()
+		path = result.path
+		path_id = result.path_id
 		if duplicate(path):
 			continue
 		solutions.append(path)
@@ -107,6 +126,7 @@ def main():
 		print("%s:%r" % (imageid, path))
 
 	print("num_processed: %d" % total_processed)
+	print("total_valid: %d" % total_valid)
 
 # cProfile.run('main()')
 main()

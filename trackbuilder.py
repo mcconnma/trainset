@@ -37,11 +37,10 @@ class TrackBuilder(object):
 		if path.count('s') >= 3:
 			l2 = ''.join(path * 2)
 			if l2.find('ss') == -1:
-				t1 = False
+				return False
 
 		# the curves are reversible so we need to check that number <= cl + cr
-		t2 = (path.count('cl') + path.count('cr') <= NUM_CL + NUM_CR) and path.count('s') <= NUM_S
-		return t1 and t2
+		return (path.count('cl') + path.count('cr') <= NUM_CL + NUM_CR) and path.count('s') <= NUM_S
 
 	def add(self, t):
 		if t == 'cr':
