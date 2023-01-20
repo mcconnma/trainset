@@ -1,3 +1,5 @@
+
+# Permutations of a childrens traiset
 The purpose of this post is to explore and discover the number of permutations of a childrens 16 piece train track set.
 The trainset of interest is the following:
 
@@ -12,6 +14,22 @@ n!/(n−r)!
 Where n is the number of choices, in our case 16 for number of tracks, and r is how many are chosen from the set. For example, the minimilist solution would be a circle, in which 8 pieces are used. So, in order to find the one and only solution of 8 pieces, we would need to check the following number of permutations:
 
 16!/(8)!=518,918,400
+
+
+```
+
+def add_children(path, depth):
+  if (depth == 1):
+    yield path + ['cl']
+    yield path + ['s']
+    yield path + ['cr']
+  else:
+    for p in add_children(path + ['cl'], depth - 1): yield p
+    for p in add_children(path + ['s'], depth - 1): yield p
+    for p in add_children(path + ['cr'], depth - 1): yield p
+```
+
+![alt text](http://mcconnma.github.io/trainset/12.gif)
 
 
 # Permutations of a childrens traiset
