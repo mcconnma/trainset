@@ -1,6 +1,8 @@
 The purpose of this post is to explore and discover the number of permutations of a childrens 16 piece train track set.
 The trainset of interest is the following:
 
+![alt text](http://mcconnma.github.io/trainset/lillabo-trainset.jpg)
+
 
 This particular trainset has a total of 16 track piecies, 12 curved and 4 straight. The curved pieces are reversible (the straight ones are not) and 2 of the 4 straight pieces form a bridge as in the picture. I am interested in all solutions, for example those that use 10 or 12 pieces, not just all 16. Additionally, I want to solve this programatically and to create a visual representation of the solutions. A solution will be presented that uses Python to solve it programatically, along with a 2d graphics program called Cairo.
 
