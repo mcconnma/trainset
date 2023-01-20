@@ -46,6 +46,7 @@ def add_children(path, depth):
 
 ![alt text](http://mcconnma.github.io/trainset/12.gif)
 
+14: (images/14.gif)
 
 # Permutations of a childrens traiset
 http://mcconnma.github.io/posts/trainset-p1/
